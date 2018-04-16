@@ -101,7 +101,7 @@ public static void something_would_wrong_so_i_want_cancel_it(){
 ```
 如上的例子，使用 **something** 会检测出 _isCompletedExceptionally()_,但是 使用 **exHandle()** 进行回滚，则不会让 _A_ 白跑一趟拿一堆糖过来
 
->> 有的时候不想回滚，想有个判断呢
+>> 
 
 
 ```
