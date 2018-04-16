@@ -51,7 +51,7 @@ public static void syncPipline(){
 
 ```
 public static void AsyncPipline(){
-    aysnc = CompletableFuture.completableFuture("A: I got some sugar").thenApplyAsync(()->{
+    aysnc = CompletableFuture.completedFuture("A: I will take some sugar").thenApplyAsync(()->{
         //B : I got hot water
     });
     // I need to wait here ,Because I have nothing
@@ -60,8 +60,53 @@ public static void AsyncPipline(){
     aysnc.join()
 }
 ```
+_thenAcceptAsync_ 串联CompletableFuture,异步执行，最后记得 _join()_ 
 
->> 
+>> 出现计算异常该怎么办
+
+这次选择 _thenAcceptAsync(Function,Executor)_ ,选择一个自定义的 **Executor** 
+
+```
+
+public static void something_would_happen(){
+    something = CompletableFuture.completedFuture("A : I will take some sugar").thenAcceptAysnc(fn->{
+        // "B : I will take hot water"
+    },DelayedExecutor(5,TimeUnit.Minutes));
+    exhand = somehtin.handle((s, th) -> { return (th != null) ? "where is water" : ""; });
+                 cf.completeExceptionally(new RuntimeException("completed exceptionally"));
+    somehting.join();
+    // then somehting wrong but exhand
+    exhand.join();
+    // then There will be complaints           
+}
+
+```
+
+_DelayedExecutor_ 可以看看 **java.util.concurrent.Delayed** 接口的实现，有很多现成的，也可以在接口规约上自行定制，如上例子在没有 _handle()_ 的情况下，我们就只剩下糖没有热水了，这样子泡咖啡会出错，但是使用 _handle()_ 会警惕的检查一下，提前定制好计划，没水就不继续了
+
+>> 既然会出现计算异常，可不可以取消呢
+ 
+可以
+```
+public static void something_would_wrong_so_i_want_cancel_it(){
+    something = CompletableFuture.completedFuture("A : I will take some sugar").thenAcceptAysnc(fn->{
+            // "B : I will take hot water"
+        },DelayedExecutor(5,TimeUnit.Minutes));
+    exHandle = something.exceptionally(th->" roll back");
+    AssertTrue(something.canel(true))
+    AssertTrue(something.isCompletedExceptionally())
+    // but use exception handle
+    exHandle.join()
+}
+```
+如上的例子，使用 **something** 会检测出 _isCompletedExceptionally()_,但是 使用 **exHandle()** 进行回滚，则不会让 _A_ 白跑一趟拿一堆糖过来
+
+>> 有的时候不想回滚，想有个判断呢
+
+
+```
+public static void 
+```
 
 
 # convert between Flowable and Computable 
