@@ -9,6 +9,7 @@ public class AdaptersTest {
 
     @Test
     public void can_accept_completableStage() {
-        Adapters.completableStage(CompletableFuture.completedFuture(MESSAGE)).test();
+        Adapters.completableStage(CompletableFuture.completedFuture(MESSAGE)).test().assertComplete().assertValue(MESSAGE);
     }
+
 }
